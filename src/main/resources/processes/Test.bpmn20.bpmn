@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/processdef" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1557134493403" name="" targetNamespace="http://www.activiti.org/processdef" typeLanguage="http://www.w3.org/2001/XMLSchema">
+  <process id="Test" isClosed="false" isExecutable="true" name="Test" processType="None">
+    <documentation id="Test_D_1"><![CDATA[测试]]></documentation>
+    <startEvent id="startEvent1"/>
+    <userTask activiti:assignee="张三" activiti:exclusive="true" id="inputInfo" name="填写请假信息"/>
+    <userTask activiti:exclusive="true" id="mangerApplyFor" name="经理审批"/>
+    <endEvent id="endEvent1"/>
+    <exclusiveGateway gatewayDirection="Unspecified" id="_2" name="请假天数"/>
+    <sequenceFlow id="_4" name="小于等于三天" sourceRef="_2" targetRef="mangerApplyFor">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${day <= 3}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask activiti:exclusive="true" id="majordomoApplyFor" name="总监审批"/>
+    <sequenceFlow id="_6" name="大于三天" sourceRef="_2" targetRef="majordomoApplyFor">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${day > 3}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask activiti:class="com.revert.xc.activitit.test.serviceTask" activiti:exclusive="true" id="result" name="结果处理"/>
+    <sequenceFlow id="_11" sourceRef="mangerApplyFor" targetRef="result"/>
+    <sequenceFlow id="_12" sourceRef="majordomoApplyFor" targetRef="result"/>
+    <sequenceFlow id="_13" sourceRef="result" targetRef="endEvent1"/>
+    <userTask activiti:exclusive="true" id="submitApplyFor" name="提交申请"/>
+    <sequenceFlow id="_8" sourceRef="submitApplyFor" targetRef="_2"/>
+    <sequenceFlow id="_3" sourceRef="startEvent1" targetRef="inputInfo"/>
+    <sequenceFlow id="_5" sourceRef="inputInfo" targetRef="submitApplyFor"/>
+  </process>
+  <bpmndi:BPMNDiagram documentation="background=#3C3F41;count=1;horizontalcount=1;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0" id="Diagram-_1" name="New Diagram">
+    <bpmndi:BPMNPlane bpmnElement="Test">
+      <bpmndi:BPMNShape bpmnElement="startEvent1" id="Shape-startEvent1">
+        <omgdc:Bounds height="32.0" width="32.0" x="275.0" y="-5.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="inputInfo" id="Shape-inputInfo">
+        <omgdc:Bounds height="80.0" width="100.0" x="240.0" y="85.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="80.0" width="100.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="mangerApplyFor" id="Shape-mangerApplyFor">
+        <omgdc:Bounds height="80.0" width="100.0" x="140.0" y="430.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="80.0" width="100.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endEvent1" id="Shape-endEvent1">
+        <omgdc:Bounds height="32.0" width="32.0" x="285.0" y="680.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_2" id="Shape-_2" isMarkerVisible="false">
+        <omgdc:Bounds height="32.0" width="32.0" x="275.0" y="315.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="majordomoApplyFor" id="Shape-majordomoApplyFor">
+        <omgdc:Bounds height="85.0" width="110.0" x="340.0" y="430.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="85.0" width="110.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="result" id="Shape-result">
+        <omgdc:Bounds height="55.0" width="85.0" x="260.0" y="585.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="submitApplyFor" id="Shape-submitApplyFor">
+        <omgdc:Bounds height="55.0" width="85.0" x="250.0" y="210.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="_13" id="BPMNEdge__13" sourceElement="result" targetElement="endEvent1">
+        <omgdi:waypoint x="301.0" y="640.0"/>
+        <omgdi:waypoint x="301.0" y="680.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_12" id="BPMNEdge__12" sourceElement="majordomoApplyFor" targetElement="result">
+        <omgdi:waypoint x="395.0" y="515.0"/>
+        <omgdi:waypoint x="395.0" y="620.0"/>
+        <omgdi:waypoint x="345.0" y="620.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_3" id="BPMNEdge__3" sourceElement="startEvent1" targetElement="inputInfo">
+        <omgdi:waypoint x="291.0" y="27.0"/>
+        <omgdi:waypoint x="291.0" y="85.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_4" id="BPMNEdge__4" sourceElement="_2" targetElement="mangerApplyFor">
+        <omgdi:waypoint x="275.0" y="331.0"/>
+        <omgdi:waypoint x="195.0" y="410.0"/>
+        <omgdi:waypoint x="195.0" y="430.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_5" id="BPMNEdge__5" sourceElement="inputInfo" targetElement="submitApplyFor">
+        <omgdi:waypoint x="292.5" y="165.0"/>
+        <omgdi:waypoint x="292.5" y="210.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_6" id="BPMNEdge__6" sourceElement="_2" targetElement="majordomoApplyFor">
+        <omgdi:waypoint x="307.0" y="331.0"/>
+        <omgdi:waypoint x="395.0" y="415.0"/>
+        <omgdi:waypoint x="395.0" y="430.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_8" id="BPMNEdge__8" sourceElement="submitApplyFor" targetElement="_2">
+        <omgdi:waypoint x="291.0" y="265.0"/>
+        <omgdi:waypoint x="291.0" y="315.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_11" id="BPMNEdge__11" sourceElement="mangerApplyFor" targetElement="result">
+        <omgdi:waypoint x="195.0" y="510.0"/>
+        <omgdi:waypoint x="195.0" y="555.0"/>
+        <omgdi:waypoint x="260.0" y="612.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

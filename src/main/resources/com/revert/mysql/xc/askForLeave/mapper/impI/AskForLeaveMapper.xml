@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.revert.xc.askForLeave.mapper.AskForLeaveMapper">
+  <resultMap id="BaseResultMap" type="com.revert.xc.askForLeave.model.AskForLeave">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="pro_instance_id" jdbcType="VARCHAR" property="proInstanceId" />
+    <result column="task_id" jdbcType="VARCHAR" property="taskId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
+    <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+    <result column="day" jdbcType="INTEGER" property="day" />
+    <result column="approver_name" jdbcType="VARCHAR" property="approverName" />
+    <result column="approver_result" jdbcType="INTEGER" property="approverResult" />
+    <result column="approver_remark" jdbcType="VARCHAR" property="approverRemark" />
+    <result column="approver_date" jdbcType="TIMESTAMP" property="approverDate" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, pro_instance_id, task_id, name, start_date, end_date, day, approver_name, approver_result, 
+    approver_remark, approver_date, create_date, create_by
+  </sql>
+  <sql id="Base_Where">
+    <if test="id != null">
+      and id = #{id,jdbcType=BIGINT}
+    </if>
+    <if test="proInstanceId != null">
+      and pro_instance_id = #{proInstanceId,jdbcType=VARCHAR}
+    </if>
+    <if test="taskId != null">
+      and task_id = #{taskId,jdbcType=VARCHAR}
+    </if>
+    <if test="name != null">
+      and name = #{name,jdbcType=VARCHAR}
+    </if>
+    <if test="startDate != null">
+      and start_date = #{startDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endDate != null">
+      and end_date = #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="day != null">
+      and day = #{day,jdbcType=INTEGER}
+    </if>
+    <if test="approverName != null">
+      and approver_name = #{approverName,jdbcType=VARCHAR}
+    </if>
+    <if test="approverResult != null">
+      and approver_result = #{approverResult,jdbcType=INTEGER}
+    </if>
+    <if test="approverRemark != null">
+      and approver_remark = #{approverRemark,jdbcType=VARCHAR}
+    </if>
+    <if test="approverDate != null">
+      and approver_date = #{approverDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="createDate != null">
+      and create_date = #{createDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="createBy != null">
+      and create_by = #{createBy,jdbcType=BIGINT}
+    </if>
+    <if test="proInstanceIds != null">
+      and pro_instance_id in
+      <foreach collection="proInstanceIds" index="index" item="item" separator="," open="(" close=")">
+        #{item}
+      </foreach>
+    </if>
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_askforleave
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByProperties" parameterType="com.revert.xc.askForLeave.model.AskForLeave" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_askforleave
+    where 1=1
+    <include refid="Base_Where"/>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_askforleave
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.revert.xc.askForLeave.model.AskForLeave">
+    insert into t_askforleave (id, pro_instance_id, task_id, 
+      name, start_date, end_date, 
+      day, approver_name, approver_result, 
+      approver_remark, approver_date, create_date, 
+      create_by)
+    values (#{id,jdbcType=BIGINT}, #{proInstanceId,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{startDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP}, 
+      #{day,jdbcType=INTEGER}, #{approverName,jdbcType=VARCHAR}, #{approverResult,jdbcType=INTEGER}, 
+      #{approverRemark,jdbcType=VARCHAR}, #{approverDate,jdbcType=TIMESTAMP}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{createBy,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.revert.xc.askForLeave.model.AskForLeave">
+    insert into t_askforleave
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="proInstanceId != null">
+        pro_instance_id,
+      </if>
+      <if test="taskId != null">
+        task_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="startDate != null">
+        start_date,
+      </if>
+      <if test="endDate != null">
+        end_date,
+      </if>
+      <if test="day != null">
+        day,
+      </if>
+      <if test="approverName != null">
+        approver_name,
+      </if>
+      <if test="approverResult != null">
+        approver_result,
+      </if>
+      <if test="approverRemark != null">
+        approver_remark,
+      </if>
+      <if test="approverDate != null">
+        approver_date,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="proInstanceId != null">
+        #{proInstanceId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null">
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null">
+        #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null">
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="day != null">
+        #{day,jdbcType=INTEGER},
+      </if>
+      <if test="approverName != null">
+        #{approverName,jdbcType=VARCHAR},
+      </if>
+      <if test="approverResult != null">
+        #{approverResult,jdbcType=INTEGER},
+      </if>
+      <if test="approverRemark != null">
+        #{approverRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="approverDate != null">
+        #{approverDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.revert.xc.askForLeave.model.AskForLeave">
+    update t_askforleave
+    <set>
+      <if test="proInstanceId != null">
+        pro_instance_id = #{proInstanceId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null">
+        task_id = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null">
+        start_date = #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null">
+        end_date = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="day != null">
+        day = #{day,jdbcType=INTEGER},
+      </if>
+      <if test="approverName != null">
+        approver_name = #{approverName,jdbcType=VARCHAR},
+      </if>
+      <if test="approverResult != null">
+        approver_result = #{approverResult,jdbcType=INTEGER},
+      </if>
+      <if test="approverRemark != null">
+        approver_remark = #{approverRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="approverDate != null">
+        approver_date = #{approverDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.revert.xc.askForLeave.model.AskForLeave">
+    update t_askforleave
+    set pro_instance_id = #{proInstanceId,jdbcType=VARCHAR},
+      task_id = #{taskId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      start_date = #{startDate,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      day = #{day,jdbcType=INTEGER},
+      approver_name = #{approverName,jdbcType=VARCHAR},
+      approver_result = #{approverResult,jdbcType=INTEGER},
+      approver_remark = #{approverRemark,jdbcType=VARCHAR},
+      approver_date = #{approverDate,jdbcType=TIMESTAMP},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

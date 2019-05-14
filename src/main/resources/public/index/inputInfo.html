@@ -1,0 +1,58 @@
+<form id="form1" style="margin-bottom: 5rem; text-align: center">
+    <div class="form-group col-lg-5" style="float: left">
+        <label for="name" style="text-align: right; line-height: 2.4rem" class=" col-lg-3">姓名：</label>
+        <input type="text" class="form-control col-lg-9" id="name" name="name" placeholder="姓名" style="float: right" required>
+    </div>
+    <div class="form-group col-lg-5" style="float: right">
+        <label for="day" style="text-align: right; line-height: 2.4rem" class=" col-lg-3">请假天数：</label>
+        <input type="number" class="form-control col-lg-9" id="day" name="day" placeholder="请假天数" style="float: right" value="1" min="1">
+    </div>
+    <div style="clear: both;"></div>
+    <div class="form-group col-lg-5" style="float: left">
+        <label for="startDate" style="text-align: right; line-height: 2.4rem" class=" col-lg-3">开始时间：</label>
+        <input type="date" class="form-control col-lg-9" id="startDate" name="startDate" style="float: right" required>
+    </div>
+    <div class="form-group col-lg-5" style="float: right">
+        <label for="endDate" style="text-align: right; line-height: 2.4rem" class=" col-lg-3">结束时间：</label>
+        <input type="date" class="form-control col-lg-9" id="endDate" name="endDate" style="float: right" readonly>
+    </div>
+    <div style="clear: both;"></div>
+    <div class="form-group col-lg-12">
+        <button id="startAcitviti" type="button" class="btn btn-success col-lg-3">提交信息</button>
+    </div>
+</form>
+<script>
+    $(function(){
+        //时间变更
+        $("#startDate").change(function(){
+            var startVal = $(this).val();
+            var dayVal = $("#day").val();
+            var tmpDate = new Date(startVal);
+            tmpDate.setDate(tmpDate.getDate() + dayVal * 1)
+            $("#endDate").val(tmpDate.Format("yyyy-MM-dd"))
+        })
+
+        //发起请求流程按钮
+        $("#startAcitviti").on('click',function(){
+            if(!$("#name").val() || !$("#startDate").val()){
+                alert("姓名和开始时间为必填项")
+                return
+            }
+
+            $.ajax({
+                type: 'post',
+                url: '/api/v1/askForLeave',
+                data: $("#form1").serialize(),
+                success: function(data) {
+                    if(data && data.code == "2000"){
+                        sessionStorage.setItem("lastProInstanceId", data.data.proInstanceId);
+                        alert("提交成功")
+                    }
+                    var date = new Date().Format("yyyy-MM-dd HH:mm:ss")
+                    $("#resData").append("<div>"+date+"："+ JSON.stringify(data) + "</div>")
+                    sessionStorage.setItem("resData", $("#resData").html())
+                }
+            });
+        })
+    })
+</script>

@@ -1,0 +1,70 @@
+<div>
+    <table class="table table-striped .table-hover">
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>实例ID</th>
+                <th>申请人姓名</th>
+                <th>开始时间</th>
+                <th>结束时间</th>
+                <th>天数</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody id="subAList-tbody">
+
+        </tbody>
+    </table>
+</div>
+<script>
+
+    function submitApplyFor(id){
+        $.ajax({
+            type: 'post',
+            url: '/api/v1/askForLeave/submitApplyFor',
+            data: {id:id},
+            success: function(data) {
+                if(data.code == "2000"){
+                    alert("提交成功")
+                    loadGrid()
+                }else{
+                    alert(data.message)
+                }
+            }
+        });
+    }
+    function loadGrid(){
+        $.ajax({
+            type: 'get',
+            url: '/api/v1/askForLeave/all',
+            data: {queryType : "submitApplyFor"},
+            success: function(data) {
+                if(data && data.code == "2000") {
+                    var tbodyHtml = ""
+                    var res = data.data
+                    var index = 0;
+                    var len = res.length;
+                    for( ;index < len ; index++){
+                        var el = res[index];
+                        tbodyHtml += "<tr>"
+                        tbodyHtml += "<th>"+el.id+"</th>";
+                        tbodyHtml += "<th>"+el.proInstanceId+"</th>";
+                        tbodyHtml += "<th>"+el.name+"</th>";
+                        tbodyHtml += "<th>"+el.startDate+"</th>";
+                        tbodyHtml += "<th>"+el.endDate+"</th>";
+                        tbodyHtml += "<th>"+el.day+"</th>";
+                        tbodyHtml += "<th>"+el.createDate+"</th>";
+                        tbodyHtml += "<th>"+'<button onclick="submitApplyFor('+el.id+')" type="button" class="btn btn-success">发起申请</button>'+"</th>";
+                        tbodyHtml += "</tr>";
+                    }
+                    $("#subAList-tbody").html(tbodyHtml)
+                }
+            }
+        });
+    }
+    $(function(){
+        //初始化表格
+        loadGrid();
+    })
+</script>

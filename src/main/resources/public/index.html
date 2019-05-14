@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Activit6流程图</title>
+  <link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+  <link >
+  <style>
+    html{
+      padding: 0px;
+      margin: 0px;
+      width: 100%;
+      height: 100%;
+    }
+    body{
+      text-align: center;
+      width: 100%;
+      height: 100%;
+    }
+    .div-head{
+      border-bottom: 1px solid #000;
+    }
+    .div-body{
+      width: 100%;
+      height: 100%;
+    }
+    .div-body > .div-left{
+      width: 30%;
+      height: 100%;
+      float: left;
+      border-right: 1px solid #000;
+    }
+    .div-body > .div-right{
+      width: 69%;
+      height: 100%;
+      float: right;
+    }
+    .div-right > .opt-head{
+      width: 100%;
+    }
+    .btn-default {
+      color: #333;
+      background-color: #fff;
+      border-color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div class="div-head">
+    <h1>Activiti6</h1>
+  </div>
+  <div class="div-body">
+    <div class="div-left">
+      <h3>流程图</h3>
+      <img src="/processes/Test.bpmn20.png" style=""/>
+    </div>
+    <div class="div-right">
+      <h3>操作平台</h3>
+      <div style="width: 100%;height: 100%">
+        <div class="opt-head" style="margin-bottom: 40px;border-bottom: 1px solid #000;padding-bottom: 20px">
+          <button id="startA" type="button" class="btn btn-danger">填写请假信息</button>
+          <button id="submitApplyFor" type="button" class="btn btn-info">提交申请列表</button>
+          <button id="manager" type="button" class="btn btn-primary">经理审批</button>
+          <button id="majordomo" type="button" class="btn btn-info">总监审批</button>
+          <button id="queryProInstance" type="button" class="btn btn-default">查看实例当前进度</button>
+          <div id="resData">
+          </div>
+        </div>
+        <div class="opt-content" style="height: 100%;">
+          <div class="col-lg-12" id="loadHtml" style="height: 100%">
+            welcome
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  <script src="/js/index.js"></script>
+</body>
+</html>

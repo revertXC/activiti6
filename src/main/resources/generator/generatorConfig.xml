@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ~ The MIT License (MIT) ~ ~ Copyright (c) 2014 abel533@gmail.com ~ ~
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    ~ of this software and associated documentation files (the "Software"), to
+    deal ~ in the Software without restriction, including without limitation
+    the rights ~ to use, copy, modify, merge, publish, distribute, sublicense,
+    and/or sell ~ copies of the Software, and to permit persons to whom the Software
+    is ~ furnished to do so, subject to the following conditions: ~ ~ The above
+    copyright notice and this permission notice shall be included in ~ all copies
+    or substantial portions of the Software. ~ ~ THE SOFTWARE IS PROVIDED "AS
+    IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR ~ IMPLIED, INCLUDING BUT NOT
+    LIMITED TO THE WARRANTIES OF MERCHANTABILITY, ~ FITNESS FOR A PARTICULAR
+    PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE ~ AUTHORS OR COPYRIGHT
+    HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER ~ LIABILITY, WHETHER IN
+    AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, ~ OUT OF OR IN CONNECTION
+    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN ~ THE SOFTWARE. -->
+
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <!-- 引入配置文件 -->
+    <properties resource="./generator/generate.properties"/>
+    <!-- 在 pom.xml 插件（plugin）中添加了mysql-connerctor 就不需要下面的classPathEntry -->
+    <!--     <classPathEntry location="D:\xiecong\mavenRepository\mysql\mysql-connector-java\5.1.42\mysql-connector-java-5.1.42.jar"/>  -->
+
+    <context id="generatorSql" defaultModelType="flat">
+        <property name="beginningDelimiter" value="`" />
+        <property name="endingDelimiter" value="`" />
+
+        <commentGenerator>
+            <!-- 这个元素用来去除指定生成的注释中是否包含生成的日期 false:表示保护 -->
+            <!-- 如果生成日期，会造成即使修改一个字段，整个实体类所有属性都会发生变化，不利于版本控制，所以设置为true -->
+            <property name="suppressDate" value="true"/>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <!-- 数据库地址 -->
+        <jdbcConnection driverClass="${driverClass}"
+                        connectionURL="${connectionURL}"
+                        userId="${userName}"
+                        password="${password}">
+        </jdbcConnection>
+
+        <javaTypeResolver type="org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl">
+            <!--
+                true：使用BigDecimal对应DECIMAL和 NUMERIC数据类型
+                false：默认,
+                    scale>0;length>18：使用BigDecimal;
+                    scale=0;length[10,18]：使用Long；
+                    scale=0;length[5,9]：使用Integer；
+                    scale=0;length<5：使用Short；
+             -->
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!-- 生成Entity位置 -->
+        <javaModelGenerator targetPackage="${model_targetPackage}" targetProject="${model_targetProject}" />
+        <!--<javaModelGenerator targetPackage="com.deer.model.mysql" targetProject="../xc-c-model/src/main/java" />-->
+
+        <!-- 生成 *Mapper.xml位置 -->
+        <sqlMapGenerator targetPackage="${xml_targetPackage}" targetProject="${xml_targetProjecte}"/>
+        <!--<sqlMapGenerator targetPackage="com.deer.mapper.mysql.dao.impI" targetProject="./src/main/resources"/>-->
+
+        <!-- 生成 *Mapper.java位置 -->
+        <javaClientGenerator targetPackage="${mapper_targetPackage}" targetProject="${mapper_targetProjecte}" type="XMLMAPPER"/>
+        <!--<javaClientGenerator targetPackage="com.deer.mapper.mysql.dao" targetProject="./src/main/java" type="XMLMAPPER"/>-->
+
+        <!-- 注：如果 *Mapper.java 只生成了 insert 请检查 数据库中的表 是否存在主键 -->
+
+        <table tableName="${tableName}"
+               domainObjectName="${domainObjectName}"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false" >
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+        <!--<table tableName="sys_t_resource" domainObjectName="Resource" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" >-->
+            <!--<property name="useActualColumnNames" value="false"/>-->
+        <!--</table>-->
+        <!--<table tableName="table2" domainObjectName="TableModel" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" >-->
+            <!--<property name="useActualColumnNames" value="false"/>-->
+        <!--</table>-->
+    </context>
+</generatorConfiguration>

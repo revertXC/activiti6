@@ -1,0 +1,7 @@
+增加Maven 指令
+
+working directory : 指定到b-core
+command line : mybatis-generator:generate
+更改需要生产的表
+
+然后保存，然后在执行
