@@ -5,10 +5,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @SpringBootApplication(scanBasePackages = {"com.revert"})
 public class RevertApplication extends SpringBootServletInitializer {
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         SpringApplication.run(RevertApplication.class,args);
     }
 

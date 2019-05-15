@@ -59,10 +59,11 @@
       <h3>操作平台</h3>
       <div style="width: 100%;height: 100%">
         <div class="opt-head" style="margin-bottom: 40px;border-bottom: 1px solid #000;padding-bottom: 20px">
-          <button id="startA" type="button" class="btn btn-danger">填写请假信息</button>
-          <button id="submitApplyFor" type="button" class="btn btn-info">提交申请列表</button>
-          <button id="manager" type="button" class="btn btn-primary">经理审批</button>
-          <button id="majordomo" type="button" class="btn btn-info">总监审批</button>
+          <button id="startA" type="button" class="btn btn-danger load-html" data-html="/index/inputInfo.html">填写请假信息</button>
+          <button id="submitApplyFor" type="button" class="btn btn-info load-html" data-html="/index/submitAppforList.html">提交申请列表</button>
+          <button id="manager" type="button" class="btn btn-primary load-html" data-html="/index/managerList.html">经理审批列表</button>
+          <button id="majordomo" type="button" class="btn btn-info load-html" data-html="/index/majordomoList.html">总监审批列表</button>
+          <button id="img" type="button" class="btn btn-success">查看实例跟踪图</button>
           <button id="queryProInstance" type="button" class="btn btn-default">查看实例当前进度</button>
           <div id="resData">
           </div>
@@ -76,6 +77,12 @@
     </div>
   </div>
   <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  <script>
+    var resData = sessionStorage.getItem("resData")
+    if(resData){
+      $("#resData").html(resData);
+    }
+  </script>
   <script src="/js/index.js"></script>
 </body>
 </html>

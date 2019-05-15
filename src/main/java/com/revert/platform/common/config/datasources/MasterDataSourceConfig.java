@@ -15,6 +15,7 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -22,7 +23,7 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
-@MapperScan(basePackages = "com.revert", sqlSessionFactoryRef = "masterSqlSessionFactory", annotationClass = MasterMySqlDao.class)
+@MapperScan(basePackages = "com.revert.**.mapper", sqlSessionFactoryRef = "masterSqlSessionFactory")
 public class MasterDataSourceConfig {
 
     @Value("${platform.dataSource.type}")
@@ -38,8 +39,8 @@ public class MasterDataSourceConfig {
      * 数据源
      * @return
      */
-    @Bean(name="masterDataSource",initMethod = "init", destroyMethod = "close")
     @Primary
+    @Bean(name="masterDataSource",initMethod = "init", destroyMethod = "close")
     @ConfigurationProperties(prefix = "spring.datasource.druid")
     public DataSource masterDataSource() {
         return new DruidDataSource();

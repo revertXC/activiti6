@@ -1,0 +1,9 @@
+<div id="img-div">
+</div>
+<script>
+    function getParams(name) {
+        var str = window.location.search;
+        return (str.match(new RegExp('(?:[\?#&$])'+name+'=([^&#$]*)','i'))||[])[1]||'';
+    }
+    $("#img-div").html('<img src="/api/v1/activitiImg?proInstanceId='+$("#img").attr("proInstanceId")+'">')
+</script>

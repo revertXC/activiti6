@@ -3,6 +3,8 @@ package com.revert.xc.askForLeave.controller;
 import com.revert.platform.common.base.model.WebResult;
 import com.revert.xc.askForLeave.model.AskForLeave;
 import com.revert.xc.askForLeave.service.AskForLeaveService;
+import com.revert.xc.user.model.User;
+import com.revert.xc.user.service.UserService;
 import org.activiti.engine.ManagementService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;

@@ -44,11 +44,18 @@ $(function(){
         });
     })
 
-    $("#startA").on('click', function(){
-        $("#loadHtml").load('/index/inputInfo.html')
+    $("#img").on('click', function(){
+        var lastProInstanceId = sessionStorage.getItem("lastProInstanceId");
+        var proInstanceId = prompt("查询的实列ID", lastProInstanceId || '');
+        if(!proInstanceId){
+            return
+        }
+        $(this).attr("proInstanceId", proInstanceId);
+        $("#loadHtml").load("/index/img.html")
     })
-    $("#submitApplyFor").on('click', function(){
-        $("#loadHtml").load('/index/submitAppforList.html')
+
+    $(".load-html").on('click', function(){
+        $("#loadHtml").load($(this).attr("data-html"))
     })
 
 });

@@ -10,6 +10,7 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -38,9 +39,9 @@ public class AskForLeaveService extends BaseService<AskForLeaveMapper, AskForLea
 
     @Override
     public List<AskForLeave> selectByProperties(AskForLeave askForLeave) {
-        if("submitApplyFor".equals(askForLeave.getQueryType())){
+        if(askForLeave.getQueryType() != null){
             List<String> proInstanceIds = new ArrayList<>();
-            List<Task> list = taskService.createTaskQuery().taskDefinitionKey("submitApplyFor").list();
+            List<Task> list = taskService.createTaskQuery().taskDefinitionKey(askForLeave.getQueryType()).orderByTaskId().desc().list();
             list.forEach(Task -> {
                 proInstanceIds.add(Task.getProcessInstanceId());
             });
