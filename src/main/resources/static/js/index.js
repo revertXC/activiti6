@@ -50,6 +50,7 @@ $(function(){
         if(!proInstanceId){
             return
         }
+        sessionStorage.setItem("lastProInstanceId", proInstanceId);
         $(this).attr("proInstanceId", proInstanceId);
         $("#loadHtml").load("/index/img.html")
     })

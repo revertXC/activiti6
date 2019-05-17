@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 @SpringBootApplication(scanBasePackages = {"com.revert"})
 public class RevertApplication extends SpringBootServletInitializer {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         SpringApplication.run(RevertApplication.class,args);
     }
 

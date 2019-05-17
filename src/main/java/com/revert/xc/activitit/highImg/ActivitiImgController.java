@@ -1,5 +1,6 @@
 package com.revert.xc.activitit.highImg;
 
+import com.revert.xc.activitit.util.ActUtils;
 import lombok.extern.log4j.Log4j2;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.FlowNode;
@@ -57,16 +58,17 @@ public class ActivitiImgController {
 
     @GetMapping
     public void getImg(@RequestParam("proInstanceId") String proInstanceId, HttpServletResponse response) throws IOException {
-        if(StringUtils.isEmpty(proInstanceId)){
-            return;
-        }
-        InputStream imageStream = getResourceDiagramInputStream(proInstanceId);
-        // 输出资源内容到相应对象
-        byte[] b = new byte[1024];
-        int len;
-        while ((len = imageStream.read(b, 0, 1024)) != -1) {
-            response.getOutputStream().write(b, 0, len);
-        }
+//        if(StringUtils.isEmpty(proInstanceId)){
+//            return;
+//        }
+//        InputStream imageStream = getResourceDiagramInputStream(proInstanceId);
+//        // 输出资源内容到相应对象
+//        byte[] b = new byte[1024];
+//        int len;
+//        while ((len = imageStream.read(b, 0, 1024)) != -1) {
+//            response.getOutputStream().write(b, 0, len);
+//        }
+        ActUtils.getFlowImgByInstanceId(proInstanceId, response.getOutputStream());
     }
 
     public InputStream getResourceDiagramInputStream(String id) {
@@ -90,7 +92,7 @@ public class ActivitiImgController {
 
             // 使用默认配置获得流程图表生成器，并生成追踪图片字符流
             ProcessDiagramGenerator processDiagramGenerator = processEngine.getProcessEngineConfiguration().getProcessDiagramGenerator();
-            InputStream imageStream = processDiagramGenerator.generateDiagram(bpmnModel, "png", executedActivityIdList, flowIds, "宋体", "微软雅黑", "黑体", null, 2.0);
+            InputStream imageStream = processDiagramGenerator.generateDiagram(bpmnModel, "png", executedActivityIdList, flowIds, "宋体", "微软雅黑", "黑体", null, 1.0);
             return imageStream;
         } catch (Exception e) {
             e.printStackTrace();
