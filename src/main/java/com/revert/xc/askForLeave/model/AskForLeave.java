@@ -32,6 +32,7 @@ public class AskForLeave extends BaseEntity {
     private Integer approverResult;
 
     private String approverRemark;
+    private String approverRemarkAppend;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date approverDate;

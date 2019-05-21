@@ -18,12 +18,19 @@
     </table>
 </div>
 <script>
-
-    function AFLeaveAgree(id){
+    //经理操作页面
+    function AFLeaveAgree1(id, proInstanceId){
+        var data = {
+            id: id,
+            proInstanceId: proInstanceId,
+            approverName: '经理001',
+            approverResult: 1,
+            approverRemark: '经理001同意'
+        }
         $.ajax({
             type: 'post',
             url: '/api/v1/askForLeave/AFLeaveAgree',
-            data: {id:id},
+            data: data,
             success: function(data) {
                 if(data.code == "2000"){
                     alert("操作成功")
@@ -55,7 +62,7 @@
                         tbodyHtml += "<th>"+el.endDate+"</th>";
                         tbodyHtml += "<th>"+el.day+"</th>";
                         tbodyHtml += "<th>"+el.createDate+"</th>";
-                        tbodyHtml += "<th>"+'<button onclick="AFLeaveAgree('+el.id+')" type="button" class="btn btn-success">同意</button>'+"</th>";
+                        tbodyHtml += "<th>"+'<button onclick="AFLeaveAgree1('+el.id+','+el.proInstanceId+')" type="button" class="btn btn-success">同意</button>'+"</th>";
                         tbodyHtml += "</tr>";
                     }
                     $("#subAList-tbody").html(tbodyHtml)

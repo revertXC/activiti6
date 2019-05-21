@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
+import java.awt.*;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import java.util.Map;
 /**
  * 流程工具类
  * 
- * @author linyb1
+ * @author xiecong
  */
 public class ActUtils {
 	
@@ -31,15 +32,12 @@ public class ActUtils {
 	
 	private static RepositoryService			repositoryService			= SpringContextUtils.getBean(RepositoryService.class);
 	private static HistoryService				historyService				= SpringContextUtils.getBean(HistoryService.class);
-	private static RuntimeService				runtimeService				= SpringContextUtils.getBean(RuntimeService.class);
-	private static TaskService					taskService					= SpringContextUtils.getBean(TaskService.class);
-	private static ProcessEngineConfiguration	processEngineConfiguration	= SpringContextUtils.getBean(ProcessEngineConfiguration.class);
-	
+
 	/**
 	 * 根据流程实例Id,获取实时流程图片
 	 * 
-	 * @param processInstanceId
-	 * @param outputStream
+	 * @param processInstanceId  实例ID
+	 * @param outputStream		 输出流
 	 * @return
 	 */
 	public static void getFlowImgByInstanceId(String processInstanceId, OutputStream outputStream) {
@@ -59,16 +57,16 @@ public class ActUtils {
 				highLightedActivitiIds.add(historicActivityInstance.getActivityId());
 			}
 			
-			List<HistoricProcessInstance> historicFinishedProcessInstances = historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).finished()
-					.list();
+//			List<HistoricProcessInstance> historicFinishedProcessInstances = historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).finished()
+//					.list();
 			ProcessDiagramGenerator processDiagramGenerator = null;
 			// 如果还没完成，流程图高亮颜色为绿色，如果已经完成为红色
-			if (!CollectionUtils.isEmpty(historicFinishedProcessInstances)) {
-				// 如果不为空，说明已经完成
-				processDiagramGenerator = processEngineConfiguration.getProcessDiagramGenerator();
-			} else {
+//			if (!CollectionUtils.isEmpty(historicFinishedProcessInstances)) {
+//				// 如果不为空，说明已经完成
+//				processDiagramGenerator = processEngineConfiguration.getProcessDiagramGenerator();
+//			} else {
 				processDiagramGenerator = new CustomProcessDiagramGenerator();
-			}
+//			}
 			
 			BpmnModel bpmnModel = repositoryService.getBpmnModel(historicProcessInstance.getProcessDefinitionId());
 			// 高亮流程已发生流转的线id集合
@@ -76,19 +74,87 @@ public class ActUtils {
 			
 			// 使用默认配置获得流程图表生成器，并生成追踪图片字符流
 			InputStream imageStream = processDiagramGenerator.generateDiagram(bpmnModel, "png", highLightedActivitiIds, highLightedFlowIds, "宋体", "微软雅黑", "黑体", null, 2.0);
-			
 			// 输出图片内容
 			byte[] b = new byte[1024];
 			int len;
 			while ((len = imageStream.read(b, 0, 1024)) != -1) {
 				outputStream.write(b, 0, len);
 			}
+			outputStream.flush();
 		} catch (Exception e) {
 			logger.error("processInstanceId" + processInstanceId + "生成流程图失败，原因：" + e.getMessage(), e);
 		}
 		
 	}
-	
+
+
+	/**
+	 * 根据流程实例Id,获取实时流程图片
+	 *
+	 * @param processInstanceId  			 实例ID
+	 * @param outputStream		 			 输出流
+	 * @param historyHighLightedColor		 历史高亮颜色
+	 * @param currentTaskColor	 			 当前节点高亮颜色
+	 * @return
+	 */
+	public static void getFlowImgByInstanceId(String processInstanceId,
+											  OutputStream outputStream,
+											  Color historyHighLightedColor,
+											  Color currentTaskColor) {
+
+		//不推荐使用这样覆盖默认的颜色，在多线程修改下会出现问题
+		//我这只是临时写的demo,只是提示修改颜色的地方在哪里
+		//如果要修改可以使用 ThreadLocal 来存这二个值
+		if(historyHighLightedColor != null) CustomProcessDiagramCanvas.HIGHLIGHT_COLOR = historyHighLightedColor;
+		if(currentTaskColor != null)CustomProcessDiagramCanvas.HIGHLIGHT_COLOR_CURRENT_NODE = currentTaskColor;
+
+		try {
+			if (StringUtils.isEmpty(processInstanceId)) {
+				logger.error("processInstanceId is null");
+				return;
+			}
+			// 获取历史流程实例
+			HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+			// 获取流程中已经执行的节点，按照执行先后顺序排序
+			List<HistoricActivityInstance> historicActivityInstances = historyService.createHistoricActivityInstanceQuery().processInstanceId(processInstanceId)
+					.orderByHistoricActivityInstanceId().asc().list();
+			// 高亮已经执行流程节点ID集合
+			List<String> highLightedActivitiIds = new ArrayList<>();
+			for (HistoricActivityInstance historicActivityInstance : historicActivityInstances) {
+				highLightedActivitiIds.add(historicActivityInstance.getActivityId());
+			}
+
+//			List<HistoricProcessInstance> historicFinishedProcessInstances = historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).finished()
+//					.list();
+			ProcessDiagramGenerator processDiagramGenerator = null;
+			// 如果还没完成，流程图高亮颜色为绿色，如果已经完成为红色
+//			if (!CollectionUtils.isEmpty(historicFinishedProcessInstances)) {
+//				// 如果不为空，说明已经完成
+//				processDiagramGenerator = processEngineConfiguration.getProcessDiagramGenerator();
+//			} else {
+			processDiagramGenerator = new CustomProcessDiagramGenerator();
+//			}
+
+			BpmnModel bpmnModel = repositoryService.getBpmnModel(historicProcessInstance.getProcessDefinitionId());
+			// 高亮流程已发生流转的线id集合
+			List<String> highLightedFlowIds = getHighLightedFlows(bpmnModel, historicActivityInstances);
+
+			// 使用默认配置获得流程图表生成器，并生成追踪图片字符流
+			InputStream imageStream = processDiagramGenerator.generateDiagram(bpmnModel, "png", highLightedActivitiIds, highLightedFlowIds, "宋体", "微软雅黑", "黑体", null, 2.0);
+			// 输出图片内容
+			byte[] b = new byte[1024];
+			int len;
+			while ((len = imageStream.read(b, 0, 1024)) != -1) {
+				outputStream.write(b, 0, len);
+			}
+			outputStream.flush();
+		} catch (Exception e) {
+			logger.error("processInstanceId" + processInstanceId + "生成流程图失败，原因：" + e.getMessage(), e);
+		}
+
+	}
+
+
 	/**
 	 * 获取已经流转的线
 	 * 

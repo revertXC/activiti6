@@ -31,6 +31,16 @@
             tmpDate.setDate(tmpDate.getDate() + dayVal * 1)
             $("#endDate").val(tmpDate.Format("yyyy-MM-dd"))
         })
+        //天数变更
+        $("#day").change(function(){
+            var dayVal = $(this).val();
+            var startVal = $("#startDate").val();
+            if(startVal){
+                var tmpDate = new Date(startVal);
+                tmpDate.setDate(tmpDate.getDate() + dayVal * 1)
+                $("#endDate").val(tmpDate.Format("yyyy-MM-dd"))
+            }
+        })
 
         //发起请求流程按钮
         $("#startAcitviti").on('click',function(){

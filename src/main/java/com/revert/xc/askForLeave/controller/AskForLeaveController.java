@@ -3,18 +3,9 @@ package com.revert.xc.askForLeave.controller;
 import com.revert.platform.common.base.model.WebResult;
 import com.revert.xc.askForLeave.model.AskForLeave;
 import com.revert.xc.askForLeave.service.AskForLeaveService;
-import com.revert.xc.user.model.User;
-import com.revert.xc.user.service.UserService;
-import org.activiti.engine.ManagementService;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
-import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +44,7 @@ public class AskForLeaveController {
         return webResult;
     }
 
+    //提交申请
     @PostMapping("/submitApplyFor")
     public WebResult submitApplyFor(@RequestParam("id") Long id){
         WebResult webResult = new WebResult();
@@ -61,6 +53,13 @@ public class AskForLeaveController {
             webResult.setCode("5000");
             webResult.setMessage(msg);
         }
+        return webResult;
+    }
+
+    @PostMapping("/AFLeaveAgree")
+    public WebResult AFLeaveAgree(AskForLeave askForLeave){
+        WebResult webResult = new WebResult();
+        askForLeaveService.AFLeaveAgree(askForLeave);
         return webResult;
     }
 

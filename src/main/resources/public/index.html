@@ -53,7 +53,7 @@
   <div class="div-body">
     <div class="div-left">
       <h3>流程图</h3>
-      <img src="/processes/Test.bpmn20.png" style=""/>
+      <img data-src="/processes/Test.bpmn20.png" style=""/>
     </div>
     <div class="div-right">
       <h3>操作平台</h3>
@@ -82,6 +82,16 @@
     if(resData){
       $("#resData").html(resData);
     }
+    $(function(){
+      $("img").each(function(){
+        var dataImg = $(this).attr("data-src");
+        if(dataImg){
+          var symbolF = "&";
+          if(dataImg.indexOf("?") == -1) symbolF = "?";
+          $(this).attr("src",dataImg+symbolF+"r="+Math.ceil(Math.random()*1000))
+        }
+      })
+    })
   </script>
   <script src="/js/index.js"></script>
 </body>

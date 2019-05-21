@@ -42,7 +42,7 @@ import java.util.List;
  * Represents a canvas on which BPMN 2.0 constructs can be drawn. Some of the icons used are licensed under a Creative Commons Attribution 2.5 License, see
  * http://www.famfamfam.com/lab/icons/silk/
  * 
- * @see org.activiti.engine.impl.bpmn.diagram.DefaultProcessDiagramGenerator
+ * @see org.activiti.image.impl.DefaultProcessDiagramGenerator
  * @author Joram Barrez
  */
 public class CustomProcessDiagramCanvas {
@@ -71,7 +71,11 @@ public class CustomProcessDiagramCanvas {
 	protected static Color			CONNECTION_COLOR				= new Color(88, 88, 88);
 	protected static Color			CONDITIONAL_INDICATOR_COLOR		= new Color(255, 255, 255);
 	// protected static Color HIGHLIGHT_COLOR = Color.RED;
-	protected static Color			HIGHLIGHT_COLOR					= Color.GREEN;
+	// 设置默认高亮颜色
+	protected static Color			HIGHLIGHT_COLOR					= Color.RED;
+	//设置当前节点所在的高亮颜色
+	protected static Color 			HIGHLIGHT_COLOR_CURRENT_NODE 	= Color.GREEN;
+
 	protected static Color			LABEL_COLOR						= new Color(112, 146, 190);
 	protected static Color			TASK_BORDER_COLOR				= new Color(187, 187, 187);
 	protected static Color			EVENT_BORDER_COLOR				= new Color(88, 88, 88);
@@ -1020,20 +1024,28 @@ public class CustomProcessDiagramCanvas {
 		
 		g.setStroke(orginalStroke);
 	}
-	
+
+	//绘制默认高亮颜色
 	public void drawHighLight(int x, int y, int width, int height) {
-		Paint originalPaint = g.getPaint();
-		Stroke originalStroke = g.getStroke();
-		
-		g.setPaint(HIGHLIGHT_COLOR);
-		g.setStroke(THICK_TASK_BORDER_STROKE);
-		
-		RoundRectangle2D rect = new RoundRectangle2D.Double(x, y, width, height, 20, 20);
-		g.draw(rect);
-		
-		g.setPaint(originalPaint);
-		g.setStroke(originalStroke);
+        drawHighLight(x, y, width, height, null);
 	}
+    //绘制高亮颜色
+    public void drawHighLight(int x, int y, int width, int height, Color color) {
+	    //设置默认颜色 HIGHLIGHT_COLOR
+	    if (color == null) color = HIGHLIGHT_COLOR;
+
+        Paint originalPaint = g.getPaint();
+        Stroke originalStroke = g.getStroke();
+
+        g.setPaint(color);
+        g.setStroke(THICK_TASK_BORDER_STROKE);
+
+        RoundRectangle2D rect = new RoundRectangle2D.Double(x, y, width, height, 20, 20);
+        g.draw(rect);
+
+        g.setPaint(originalPaint);
+        g.setStroke(originalStroke);
+    }
 	
 	public void drawTextAnnotation(String text, GraphicInfo graphicInfo) {
 		int x = (int) graphicInfo.getX();

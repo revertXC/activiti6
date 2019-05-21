@@ -27,11 +27,13 @@
   </properties>
 
   <dependencies>
+    <!-- https://mvnrepository.com/artifact/org.activiti/activiti-spring-boot-starter-basic -->
     <dependency>
       <groupId>org.activiti</groupId>
       <artifactId>activiti-spring-boot-starter-basic</artifactId>
-      <version>6.0.0</version>
+      <version>6.0.0.Beta4</version>
     </dependency>
+
     <!-- springBoot  Start-->
     <dependency>
       <groupId>org.springframework.boot</groupId>

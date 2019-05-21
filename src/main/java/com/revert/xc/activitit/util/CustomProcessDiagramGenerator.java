@@ -14,13 +14,18 @@ package com.revert.xc.activitit.util;
  * limitations under the License.
  */
 
+import org.activiti.bpmn.model.Event;
 import org.activiti.bpmn.model.Process;
 import org.activiti.bpmn.model.*;
 import org.activiti.image.ProcessDiagramGenerator;
+import org.springframework.util.CollectionUtils;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.util.*;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Class to generate an image based the diagram interchange information in a BPMN 2.0 process.
@@ -30,8 +35,8 @@ import java.util.*;
  */
 public class CustomProcessDiagramGenerator implements ProcessDiagramGenerator {
 	
-	protected Map<Class<? extends BaseElement>, ActivityDrawInstruction>	activityDrawInstructions	= new HashMap<Class<? extends BaseElement>, ActivityDrawInstruction>();
-	protected Map<Class<? extends BaseElement>, ArtifactDrawInstruction>	artifactDrawInstructions	= new HashMap<Class<? extends BaseElement>, ArtifactDrawInstruction>();
+	protected Map<Class<? extends BaseElement>, ActivityDrawInstruction>	activityDrawInstructions	= new ConcurrentHashMap<>();
+	protected Map<Class<? extends BaseElement>, ArtifactDrawInstruction>	artifactDrawInstructions	= new ConcurrentHashMap<>();
 	
 	public CustomProcessDiagramGenerator() {
 		this(1.0);
@@ -434,9 +439,21 @@ public class CustomProcessDiagramGenerator implements ProcessDiagramGenerator {
 		}
 		
 		// Draw activities and their sequence-flows
-		for (FlowNode flowNode : bpmnModel.getProcesses().get(0).findFlowElementsOfType(FlowNode.class)) {
-			drawActivity(processDiagramCanvas, bpmnModel, flowNode, highLightedActivities, highLightedFlows, scaleFactor);
+		// 绘制活动 和 顺序流
+		//最后一个节点样色是否变更
+		List<FlowNode> flowNodes = bpmnModel.getProcesses().get(0).findFlowElementsOfType(FlowNode.class);
+		int flowNodesLen = flowNodes.size();
+		String lastNode = CollectionUtils.isEmpty(highLightedActivities) ? null : highLightedActivities.get(highLightedActivities.size() - 1);
+		for(int i=0; i<flowNodesLen; i++){
+			FlowNode flowNode = flowNodes.get(i);
+			if(flowNode.getId().equals(lastNode)){
+				drawActivity(processDiagramCanvas, bpmnModel, flowNode, highLightedActivities, highLightedFlows, scaleFactor, CustomProcessDiagramCanvas.HIGHLIGHT_COLOR_CURRENT_NODE);
+			}else
+				drawActivity(processDiagramCanvas, bpmnModel, flowNode, highLightedActivities, highLightedFlows, scaleFactor);
 		}
+//		for (FlowNode flowNode : bpmnModel.getProcesses().get(0).findFlowElementsOfType(FlowNode.class)) {
+//			drawActivity(processDiagramCanvas, bpmnModel, flowNode, highLightedActivities, highLightedFlows, scaleFactor);
+//		}
 		
 		// Draw artifacts
 		for (Process process : bpmnModel.getProcesses()) {
@@ -447,15 +464,19 @@ public class CustomProcessDiagramGenerator implements ProcessDiagramGenerator {
 		
 		return processDiagramCanvas;
 	}
-	
-	protected void drawActivity(CustomProcessDiagramCanvas processDiagramCanvas, BpmnModel bpmnModel, FlowNode flowNode, List<String> highLightedActivities,
-			List<String> highLightedFlows, double scaleFactor) {
-		
+
+	protected void drawActivity(CustomProcessDiagramCanvas processDiagramCanvas,
+								BpmnModel bpmnModel,
+								FlowNode flowNode,
+								List<String> highLightedActivities,
+								List<String> highLightedFlows,
+								double scaleFactor,
+								Color color){
 		ActivityDrawInstruction drawInstruction = activityDrawInstructions.get(flowNode.getClass());
 		if (drawInstruction != null) {
-			
+
 			drawInstruction.draw(processDiagramCanvas, bpmnModel, flowNode);
-			
+
 			// Gather info on the multi instance marker
 			boolean multiInstanceSequential = false, multiInstanceParallel = false, collapsed = false;
 			if (flowNode instanceof Activity) {
@@ -466,7 +487,7 @@ public class CustomProcessDiagramGenerator implements ProcessDiagramGenerator {
 					multiInstanceParallel = !multiInstanceSequential;
 				}
 			}
-			
+
 			// Gather info on the collapsed marker
 			GraphicInfo graphicInfo = bpmnModel.getGraphicInfo(flowNode.getId());
 			if (flowNode instanceof SubProcess) {
@@ -474,20 +495,20 @@ public class CustomProcessDiagramGenerator implements ProcessDiagramGenerator {
 			} else if (flowNode instanceof CallActivity) {
 				collapsed = true;
 			}
-			
+
 			if (scaleFactor == 1.0) {
 				// Actually draw the markers
 				processDiagramCanvas.drawActivityMarkers((int) graphicInfo.getX(), (int) graphicInfo.getY(), (int) graphicInfo.getWidth(), (int) graphicInfo.getHeight(),
 						multiInstanceSequential, multiInstanceParallel, collapsed);
 			}
-			
+
 			// Draw highlighted activities
 			if (highLightedActivities.contains(flowNode.getId())) {
-				drawHighLight(processDiagramCanvas, bpmnModel.getGraphicInfo(flowNode.getId()));
+				drawHighLight(processDiagramCanvas, bpmnModel.getGraphicInfo(flowNode.getId()), color);
 			}
-			
+
 		}
-		
+
 		// Outgoing transitions of activity
 		for (SequenceFlow sequenceFlow : flowNode.getOutgoingFlows()) {
 			boolean highLighted = (highLightedFlows.contains(sequenceFlow.getId()));
@@ -497,13 +518,13 @@ public class CustomProcessDiagramGenerator implements ProcessDiagramGenerator {
 			} else if (flowNode instanceof Gateway) {
 				defaultFlow = ((Gateway) flowNode).getDefaultFlow();
 			}
-			
+
 			boolean isDefault = false;
 			if (defaultFlow != null && defaultFlow.equalsIgnoreCase(sequenceFlow.getId())) {
 				isDefault = true;
 			}
 			boolean drawConditionalIndicator = sequenceFlow.getConditionExpression() != null && !(flowNode instanceof Gateway);
-			
+
 			String sourceRef = sequenceFlow.getSourceRef();
 			String targetRef = sequenceFlow.getTargetRef();
 			FlowElement sourceElement = bpmnModel.getFlowElement(sourceRef);
@@ -513,22 +534,22 @@ public class CustomProcessDiagramGenerator implements ProcessDiagramGenerator {
 				graphicInfoList = connectionPerfectionizer(processDiagramCanvas, bpmnModel, sourceElement, targetElement, graphicInfoList);
 				int xPoints[] = new int[graphicInfoList.size()];
 				int yPoints[] = new int[graphicInfoList.size()];
-				
+
 				for (int i = 1; i < graphicInfoList.size(); i++) {
 					GraphicInfo graphicInfo = graphicInfoList.get(i);
 					GraphicInfo previousGraphicInfo = graphicInfoList.get(i - 1);
-					
+
 					if (i == 1) {
 						xPoints[0] = (int) previousGraphicInfo.getX();
 						yPoints[0] = (int) previousGraphicInfo.getY();
 					}
 					xPoints[i] = (int) graphicInfo.getX();
 					yPoints[i] = (int) graphicInfo.getY();
-					
+
 				}
-				
+
 				processDiagramCanvas.drawSequenceflow(xPoints, yPoints, drawConditionalIndicator, isDefault, highLighted, scaleFactor);
-				
+
 				// Draw sequenceflow label
 				GraphicInfo labelGraphicInfo = bpmnModel.getLabelGraphicInfo(sequenceFlow.getId());
 				if (labelGraphicInfo != null) {
@@ -537,7 +558,7 @@ public class CustomProcessDiagramGenerator implements ProcessDiagramGenerator {
 				}
 			}
 		}
-		
+
 		// Nested elements
 		if (flowNode instanceof FlowElementsContainer) {
 			for (FlowElement nestedFlowElement : ((FlowElementsContainer) flowNode).getFlowElements()) {
@@ -546,6 +567,12 @@ public class CustomProcessDiagramGenerator implements ProcessDiagramGenerator {
 				}
 			}
 		}
+	}
+
+	protected void drawActivity(CustomProcessDiagramCanvas processDiagramCanvas, BpmnModel bpmnModel, FlowNode flowNode, List<String> highLightedActivities,
+			List<String> highLightedFlows, double scaleFactor) {
+		drawActivity(processDiagramCanvas, bpmnModel, flowNode, highLightedActivities,highLightedFlows, scaleFactor, null);
+
 	}
 	
 	/**
@@ -650,12 +677,17 @@ public class CustomProcessDiagramGenerator implements ProcessDiagramGenerator {
 			drawInstruction.draw(processDiagramCanvas, bpmnModel, artifact);
 		}
 	}
-	
+
+	//绘画高亮图
 	private static void drawHighLight(CustomProcessDiagramCanvas processDiagramCanvas, GraphicInfo graphicInfo) {
-		processDiagramCanvas.drawHighLight((int) graphicInfo.getX(), (int) graphicInfo.getY(), (int) graphicInfo.getWidth(), (int) graphicInfo.getHeight());
-		
+		drawHighLight(processDiagramCanvas, graphicInfo, null);
+//		processDiagramCanvas.drawHighLight((int) graphicInfo.getX(), (int) graphicInfo.getY(), (int) graphicInfo.getWidth(), (int) graphicInfo.getHeight());
 	}
-	
+
+	private static void drawHighLight(CustomProcessDiagramCanvas processDiagramCanvas, GraphicInfo graphicInfo, Color color) {
+		processDiagramCanvas.drawHighLight((int) graphicInfo.getX(), (int) graphicInfo.getY(), (int) graphicInfo.getWidth(), (int) graphicInfo.getHeight(), color);
+	}
+
 	protected static CustomProcessDiagramCanvas initProcessDiagramCanvas(BpmnModel bpmnModel, String imageType, String activityFontName, String labelFontName,
 			ClassLoader customClassLoader) {
 		
@@ -847,7 +879,20 @@ public class CustomProcessDiagramGenerator implements ProcessDiagramGenerator {
 		
 		void draw(CustomProcessDiagramCanvas processDiagramCanvas, BpmnModel bpmnModel, Artifact artifact);
 	}
-	
+
+	/**
+	 *
+	 * @param bpmnModel     				npmn资源
+	 * @param imageType						图片类型
+	 * @param highLightedActivities			高亮节点
+	 * @param highLightedFlows				高亮线
+	 * @param activityFontName				节点字体
+	 * @param labelFontName					标签字体
+	 * @param annotationFontName
+	 * @param customClassLoader
+	 * @param scaleFactor
+	 * @return
+	 */
 	@Override
 	public InputStream generateDiagram(BpmnModel bpmnModel, String imageType, List<String> highLightedActivities, List<String> highLightedFlows, String activityFontName,
 			String labelFontName, String annotationFontName, ClassLoader customClassLoader, double scaleFactor) {

@@ -1,136 +1,136 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/processdef" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1557134493403" name="" targetNamespace="http://www.activiti.org/processdef" typeLanguage="http://www.w3.org/2001/XMLSchema">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/processdef" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1558337132287" name="" targetNamespace="http://www.activiti.org/processdef" typeLanguage="http://www.w3.org/2001/XMLSchema">
   <process id="Test" isClosed="false" isExecutable="true" name="Test" processType="None">
     <documentation id="Test_D_1"><![CDATA[测试]]></documentation>
     <startEvent id="startEvent1"/>
-    <userTask activiti:assignee="张三" activiti:exclusive="true" id="inputInfo" name="填写请假信息"/>
+    <userTask activiti:exclusive="true" id="inputInfo" name="填写请假信息"/>
+    <sequenceFlow id="sid-94C344CD-8C0D-4CB5-9934-FEA8F5C81935" sourceRef="startEvent1" targetRef="inputInfo"/>
+    <userTask activiti:exclusive="true" id="submitApplyFor" name="提交申请"/>
+    <sequenceFlow id="sid-291418FC-25EB-4B31-961E-F5FBF54C600C" sourceRef="inputInfo" targetRef="submitApplyFor"/>
+    <exclusiveGateway gatewayDirection="Unspecified" id="sid-E3C945AA-385F-4F11-9554-7E6F0ED8A9C2"/>
+    <sequenceFlow id="sid-01883C69-F354-4198-BC5E-B9D6D1F8A81C" sourceRef="submitApplyFor" targetRef="sid-E3C945AA-385F-4F11-9554-7E6F0ED8A9C2"/>
     <userTask activiti:exclusive="true" id="mangerApplyFor" name="经理审批"/>
-    <endEvent id="endEvent1"/>
-    <exclusiveGateway gatewayDirection="Unspecified" id="_2" name="请假天数"/>
-    <sequenceFlow id="_4" name="小于等于三天" sourceRef="_2" targetRef="mangerApplyFor">
+    <sequenceFlow id="sid-7727D2E2-AC7C-4D07-BB97-1245557FF88E" name="小于等于3天" sourceRef="sid-E3C945AA-385F-4F11-9554-7E6F0ED8A9C2" targetRef="mangerApplyFor">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${day <= 3}]]></conditionExpression>
     </sequenceFlow>
     <userTask activiti:exclusive="true" id="majordomoApplyFor" name="总监审批"/>
-    <sequenceFlow id="_6" name="大于三天" sourceRef="_2" targetRef="majordomoApplyFor">
+    <sequenceFlow id="sid-9CF2DB83-9F0F-4BEA-9DB6-06FCF5788854" name="大于3天" sourceRef="sid-E3C945AA-385F-4F11-9554-7E6F0ED8A9C2" targetRef="majordomoApplyFor">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${day > 3}]]></conditionExpression>
     </sequenceFlow>
-    <serviceTask activiti:class="com.revert.xc.activitit.test.serviceTask" activiti:exclusive="true" id="result" name="结果处理"/>
-    <sequenceFlow id="_11" sourceRef="mangerApplyFor" targetRef="result"/>
-    <sequenceFlow id="_12" sourceRef="majordomoApplyFor" targetRef="result"/>
-    <sequenceFlow id="_13" sourceRef="result" targetRef="endEvent1"/>
-    <userTask activiti:exclusive="true" id="submitApplyFor" name="提交申请"/>
-    <sequenceFlow id="_8" sourceRef="submitApplyFor" targetRef="_2"/>
-    <sequenceFlow id="_3" sourceRef="startEvent1" targetRef="inputInfo"/>
-    <sequenceFlow id="_5" sourceRef="inputInfo" targetRef="submitApplyFor"/>
+    <serviceTask activiti:class="com.revert.xc.activitit.test.serviceTask.ResultExecTask" activiti:exclusive="true" id="result" name="结果处理"/>
+    <sequenceFlow id="sid-EC0DB676-3630-4ED6-98BC-6B5BE8C1F9A9" sourceRef="mangerApplyFor" targetRef="result"/>
+    <sequenceFlow id="sid-E6F0D872-DE66-4453-83A4-698EBDDBBBFF" sourceRef="majordomoApplyFor" targetRef="result"/>
+    <endEvent id="sid-DA5491E9-A2E2-45DE-A0AF-C4D2F05B0B28"/>
+    <sequenceFlow id="sid-30A34CC6-6256-4292-B39A-A297CCA205C4" sourceRef="result" targetRef="sid-DA5491E9-A2E2-45DE-A0AF-C4D2F05B0B28"/>
   </process>
   <bpmndi:BPMNDiagram documentation="background=#3C3F41;count=1;horizontalcount=1;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0" id="Diagram-_1" name="New Diagram">
     <bpmndi:BPMNPlane bpmnElement="Test">
       <bpmndi:BPMNShape bpmnElement="startEvent1" id="Shape-startEvent1">
-        <omgdc:Bounds height="32.0" width="32.0" x="275.0" y="-5.0"/>
+        <omgdc:Bounds height="32.0" width="32.0" x="420.0" y="45.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="inputInfo" id="Shape-inputInfo">
-        <omgdc:Bounds height="80.0" width="100.0" x="240.0" y="85.0"/>
+        <omgdc:Bounds height="80.0" width="100.0" x="385.0" y="135.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="80.0" width="100.0" x="0.0" y="0.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="mangerApplyFor" id="Shape-mangerApplyFor">
-        <omgdc:Bounds height="80.0" width="100.0" x="140.0" y="430.0"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="80.0" width="100.0" x="0.0" y="0.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="endEvent1" id="Shape-endEvent1">
-        <omgdc:Bounds height="32.0" width="32.0" x="285.0" y="680.0"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="_2" id="Shape-_2" isMarkerVisible="false">
-        <omgdc:Bounds height="32.0" width="32.0" x="275.0" y="315.0"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="majordomoApplyFor" id="Shape-majordomoApplyFor">
-        <omgdc:Bounds height="85.0" width="110.0" x="340.0" y="430.0"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="85.0" width="110.0" x="0.0" y="0.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="result" id="Shape-result">
-        <omgdc:Bounds height="55.0" width="85.0" x="260.0" y="585.0"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="submitApplyFor" id="Shape-submitApplyFor">
-        <omgdc:Bounds height="55.0" width="85.0" x="250.0" y="210.0"/>
+        <omgdc:Bounds height="80.0" width="100.0" x="385.0" y="265.0"/>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
+          <omgdc:Bounds height="80.0" width="100.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge bpmnElement="_13" id="BPMNEdge__13" sourceElement="result" targetElement="endEvent1">
-        <omgdi:waypoint x="301.0" y="640.0"/>
-        <omgdi:waypoint x="301.0" y="680.0"/>
+      <bpmndi:BPMNShape bpmnElement="sid-E3C945AA-385F-4F11-9554-7E6F0ED8A9C2" id="Shape-sid-E3C945AA-385F-4F11-9554-7E6F0ED8A9C2" isMarkerVisible="false">
+        <omgdc:Bounds height="32.0" width="32.0" x="415.0" y="411.0"/>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="mangerApplyFor" id="Shape-mangerApplyFor">
+        <omgdc:Bounds height="80.0" width="100.0" x="255.0" y="525.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="80.0" width="100.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="majordomoApplyFor" id="Shape-majordomoApplyFor">
+        <omgdc:Bounds height="80.0" width="100.0" x="525.0" y="525.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="80.0" width="100.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="result" id="Shape-result">
+        <omgdc:Bounds height="80.0" width="100.0" x="385.0" y="676.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="80.0" width="100.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-DA5491E9-A2E2-45DE-A0AF-C4D2F05B0B28" id="Shape-sid-DA5491E9-A2E2-45DE-A0AF-C4D2F05B0B28">
+        <omgdc:Bounds height="32.0" width="32.0" x="421.0" y="795.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-01883C69-F354-4198-BC5E-B9D6D1F8A81C" id="BPMNEdge_sid-01883C69-F354-4198-BC5E-B9D6D1F8A81C" sourceElement="submitApplyFor" targetElement="sid-E3C945AA-385F-4F11-9554-7E6F0ED8A9C2">
+        <omgdi:waypoint x="431.0" y="345.0"/>
+        <omgdi:waypoint x="431.0" y="411.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="_12" id="BPMNEdge__12" sourceElement="majordomoApplyFor" targetElement="result">
-        <omgdi:waypoint x="395.0" y="515.0"/>
-        <omgdi:waypoint x="395.0" y="615.0"/>
-        <omgdi:waypoint x="345.0" y="615.0"/>
+      <bpmndi:BPMNEdge bpmnElement="sid-E6F0D872-DE66-4453-83A4-698EBDDBBBFF" id="BPMNEdge_sid-E6F0D872-DE66-4453-83A4-698EBDDBBBFF" sourceElement="majordomoApplyFor" targetElement="result">
+        <omgdi:waypoint x="575.0" y="605.0"/>
+        <omgdi:waypoint x="575.0" y="716.0"/>
+        <omgdi:waypoint x="485.0" y="716.0"/>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="_3" id="BPMNEdge__3" sourceElement="startEvent1" targetElement="inputInfo">
-        <omgdi:waypoint x="291.0" y="27.0"/>
-        <omgdi:waypoint x="291.0" y="85.0"/>
+      <bpmndi:BPMNEdge bpmnElement="sid-30A34CC6-6256-4292-B39A-A297CCA205C4" id="BPMNEdge_sid-30A34CC6-6256-4292-B39A-A297CCA205C4" sourceElement="result" targetElement="sid-DA5491E9-A2E2-45DE-A0AF-C4D2F05B0B28">
+        <omgdi:waypoint x="437.0" y="756.0"/>
+        <omgdi:waypoint x="437.0" y="795.0"/>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="_4" id="BPMNEdge__4" sourceElement="_2" targetElement="mangerApplyFor">
-        <omgdi:waypoint x="275.0" y="331.0"/>
-        <omgdi:waypoint x="190.0" y="410.0"/>
-        <omgdi:waypoint x="190.0" y="430.0"/>
+      <bpmndi:BPMNEdge bpmnElement="sid-EC0DB676-3630-4ED6-98BC-6B5BE8C1F9A9" id="BPMNEdge_sid-EC0DB676-3630-4ED6-98BC-6B5BE8C1F9A9" sourceElement="mangerApplyFor" targetElement="result">
+        <omgdi:waypoint x="305.0" y="605.0"/>
+        <omgdi:waypoint x="305.0" y="716.0"/>
+        <omgdi:waypoint x="385.0" y="716.0"/>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="_5" id="BPMNEdge__5" sourceElement="inputInfo" targetElement="submitApplyFor">
-        <omgdi:waypoint x="292.5" y="165.0"/>
-        <omgdi:waypoint x="292.5" y="210.0"/>
+      <bpmndi:BPMNEdge bpmnElement="sid-9CF2DB83-9F0F-4BEA-9DB6-06FCF5788854" id="BPMNEdge_sid-9CF2DB83-9F0F-4BEA-9DB6-06FCF5788854" sourceElement="sid-E3C945AA-385F-4F11-9554-7E6F0ED8A9C2" targetElement="majordomoApplyFor">
+        <omgdi:waypoint x="442.0" y="432.0"/>
+        <omgdi:waypoint x="575.0" y="432.0"/>
+        <omgdi:waypoint x="575.0" y="525.0"/>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+          <omgdc:Bounds height="0.0" width="-5.0" x="0.0" y="22.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="_6" id="BPMNEdge__6" sourceElement="_2" targetElement="majordomoApplyFor">
-        <omgdi:waypoint x="307.0" y="331.0"/>
-        <omgdi:waypoint x="395.0" y="415.0"/>
-        <omgdi:waypoint x="395.0" y="430.0"/>
+      <bpmndi:BPMNEdge bpmnElement="sid-7727D2E2-AC7C-4D07-BB97-1245557FF88E" id="BPMNEdge_sid-7727D2E2-AC7C-4D07-BB97-1245557FF88E" sourceElement="sid-E3C945AA-385F-4F11-9554-7E6F0ED8A9C2" targetElement="mangerApplyFor">
+        <omgdi:waypoint x="420.0" y="432.0"/>
+        <omgdi:waypoint x="305.0" y="432.0"/>
+        <omgdi:waypoint x="305.0" y="525.0"/>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+          <omgdc:Bounds height="0.0" width="24.0" x="0.0" y="-22.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="_8" id="BPMNEdge__8" sourceElement="submitApplyFor" targetElement="_2">
-        <omgdi:waypoint x="291.0" y="265.0"/>
-        <omgdi:waypoint x="291.0" y="315.0"/>
+      <bpmndi:BPMNEdge bpmnElement="sid-291418FC-25EB-4B31-961E-F5FBF54C600C" id="BPMNEdge_sid-291418FC-25EB-4B31-961E-F5FBF54C600C" sourceElement="inputInfo" targetElement="submitApplyFor">
+        <omgdi:waypoint x="435.0" y="215.0"/>
+        <omgdi:waypoint x="435.0" y="265.0"/>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="_11" id="BPMNEdge__11" sourceElement="mangerApplyFor" targetElement="result">
-        <omgdi:waypoint x="190.0" y="510.0"/>
-        <omgdi:waypoint x="190.0" y="570.0"/>
-        <omgdi:waypoint x="260.0" y="612.5"/>
+      <bpmndi:BPMNEdge bpmnElement="sid-94C344CD-8C0D-4CB5-9934-FEA8F5C81935" id="BPMNEdge_sid-94C344CD-8C0D-4CB5-9934-FEA8F5C81935" sourceElement="startEvent1" targetElement="inputInfo">
+        <omgdi:waypoint x="436.0" y="77.0"/>
+        <omgdi:waypoint x="436.0" y="135.0"/>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

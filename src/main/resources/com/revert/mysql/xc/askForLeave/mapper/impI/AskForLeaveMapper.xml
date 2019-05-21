@@ -224,6 +224,48 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <update id="updataByProInstanceId" parameterType="com.revert.xc.askForLeave.model.AskForLeave">
+    update t_askforleave
+    <set>
+      <if test="taskId != null">
+        task_id = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null">
+        start_date = #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null">
+        end_date = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="day != null">
+        day = #{day,jdbcType=INTEGER},
+      </if>
+      <if test="approverName != null">
+        approver_name = #{approverName,jdbcType=VARCHAR},
+      </if>
+      <if test="approverResult != null">
+        approver_result = #{approverResult,jdbcType=INTEGER},
+      </if>
+      <if test="approverRemark != null">
+        approver_remark = #{approverRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="approverRemarkAppend != null">
+        approver_remark = CONCAT( IFNULL(approver_remark,''), #{approverRemarkAppend,jdbcType=VARCHAR} ),
+      </if>
+      <if test="approverDate != null">
+        approver_date = #{approverDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=BIGINT},
+      </if>
+    </set>
+    where pro_instance_id = #{proInstanceId,jdbcType=VARCHAR}
+  </update>
   <update id="updateByPrimaryKey" parameterType="com.revert.xc.askForLeave.model.AskForLeave">
     update t_askforleave
     set pro_instance_id = #{proInstanceId,jdbcType=VARCHAR},

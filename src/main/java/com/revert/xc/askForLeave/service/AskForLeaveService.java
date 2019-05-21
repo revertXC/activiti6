@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * xiecong
@@ -109,8 +106,21 @@ public class AskForLeaveService extends BaseService<AskForLeaveMapper, AskForLea
         }
     }
 
+    //同意
+    public String AFLeaveAgree(AskForLeave askForLeave){
+        askForLeave.setApproverDate(new Date());
+        Task task = getTaskByProInstanceId(askForLeave.getProInstanceId());
+        taskService.complete(task.getId());
+        this.mapper.updateByPrimaryKeySelective(askForLeave);
+        return "ok";
+    }
+
     private Task getTaskByProInstanceId(String id){
         return taskService.createTaskQuery().processInstanceId(id).singleResult();
+    }
+
+    public void updataByProInstanceId(AskForLeave askForLeave){
+        this.mapper.updataByProInstanceId(askForLeave);
     }
 
 
