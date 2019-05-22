@@ -1,6 +1,7 @@
 
-package com.revert.xc.activitit.util;
+package com.revert.xc.activitit.util.activiti.generatorImg;
 
+import com.revert.xc.activitit.util.SpringContextUtils;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.FlowNode;
 import org.activiti.bpmn.model.SequenceFlow;
@@ -26,9 +27,9 @@ import java.util.Map;
  * 
  * @author xiecong
  */
-public class ActUtils {
+public class ActGeneratorImgUtils {
 	
-	private static Logger						logger						= LoggerFactory.getLogger(ActUtils.class);
+	private static Logger						logger						= LoggerFactory.getLogger(ActGeneratorImgUtils.class);
 	
 	private static RepositoryService			repositoryService			= SpringContextUtils.getBean(RepositoryService.class);
 	private static HistoryService				historyService				= SpringContextUtils.getBean(HistoryService.class);

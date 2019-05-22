@@ -1,0 +1,62 @@
+<div>
+    <div class="form-group col-lg-5" style="float: left">
+        <label for="proInstanceId" style="text-align: right; line-height: 2.4rem" class=" col-lg-4">流程实例ID：</label>
+        <input type="text" class="form-control col-lg-8" id="proInstanceId" name="proInstanceId" placeholder="流程实例ID" style="float: right" required>
+    </div>
+    <div style="clear: both;"></div>
+    <div class="form-group col-lg-5" style="float: left">
+        <label for="toFlowElementId" style="text-align: right; line-height: 2.4rem" class=" col-lg-4">跳转节点：</label>
+        <select id="toFlowElementId" class="form-control col-lg-8" style="float: right">
+            <option value="null">---请选择---</option>
+        </select>
+    </div>
+    <div style="clear: both;"></div>
+    <div class="form-group col-lg-12">
+        <button id="skipBtn" type="button" class="btn btn-success col-lg-3">节点跳转</button>
+    </div>
+</div>
+<script>
+    $(function(){
+        var lastProInstanceId = sessionStorage.getItem("lastProInstanceId");
+        $("#proInstanceId").val(lastProInstanceId);
+        $.ajax({
+            type: 'get',
+            url: '/api/v1/askForLeave/getAllNode',
+            data: {processDefinitionId : "Test:1:4"},
+            success: function(res) {
+                if(res && res.code == "2000" && res.data){
+                    var selectHtml = '<option value="null">---请选择---</option>';
+                    $.each(res.data,function(index,item){
+                        selectHtml += '<option value="'+item.id+'">'+item.name+'</option>'
+                    })
+                    $("#toFlowElementId").html(selectHtml);
+                }
+            }
+        });
+
+        $("#skipBtn").on('click', function(){
+            var proInstanceId = $("#proInstanceId").val();
+            var toFlowElementId = $("#toFlowElementId").val();
+            if(!proInstanceId){
+                alert("请填写实例ID");
+                return
+            }else if(!toFlowElementId){
+                alert("请选择跳转的节点");
+                return
+            }else{
+                $.ajax({
+                    type: 'post',
+                    url: '/api/v1/askForLeave/skipNode',
+                    data: {proInstanceId : proInstanceId, toFlowElementId: toFlowElementId},
+                    success: function(res) {
+                        if(res && res.code == "2000"){
+                            alert("操作成功")
+                        }else{
+                            alert("操作失败,"+res.message)
+                        }
+                    }
+                });
+            }
+        })
+    })
+</script>

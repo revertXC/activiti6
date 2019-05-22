@@ -1,6 +1,8 @@
 package com.revert.xc.askForLeave.controller;
 
 import com.revert.platform.common.base.model.WebResult;
+import com.revert.platform.common.constant.StaticsData;
+import com.revert.xc.activitit.util.activiti.skipNode.ActSkipNodeUtil;
 import com.revert.xc.askForLeave.model.AskForLeave;
 import com.revert.xc.askForLeave.service.AskForLeaveService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,12 +58,26 @@ public class AskForLeaveController {
         return webResult;
     }
 
+    //同意
     @PostMapping("/AFLeaveAgree")
     public WebResult AFLeaveAgree(AskForLeave askForLeave){
         WebResult webResult = new WebResult();
         askForLeaveService.AFLeaveAgree(askForLeave);
         return webResult;
     }
+    //获取流程定义的所有节点
+    @GetMapping("/getAllNode")
+    public WebResult getAllNodeByProcessDefinitionId(@RequestParam("processDefinitionId") String processDefinitionId){
+        WebResult webResult = new WebResult();
+        webResult.setData(askForLeaveService.getAllNode(processDefinitionId));
+        return webResult;
+    }
 
-
+    //获取流程定义的所有节点
+    @PostMapping("/skipNode")
+    public WebResult skipNode(@RequestParam("proInstanceId") String proInstanceId, @RequestParam("toFlowElementId") String toFlowElementId){
+        WebResult webResult = new WebResult();
+        ActSkipNodeUtil.skipNode(proInstanceId, toFlowElementId);
+        return webResult;
+    }
 }

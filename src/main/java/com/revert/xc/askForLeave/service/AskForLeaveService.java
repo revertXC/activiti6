@@ -3,6 +3,9 @@ package com.revert.xc.askForLeave.service;
 import com.revert.platform.common.base.service.BaseService;
 import com.revert.xc.askForLeave.mapper.AskForLeaveMapper;
 import com.revert.xc.askForLeave.model.AskForLeave;
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.FlowElement;
+import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.ManagementService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
@@ -11,6 +14,7 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -115,14 +119,35 @@ public class AskForLeaveService extends BaseService<AskForLeaveMapper, AskForLea
         return "ok";
     }
 
-    private Task getTaskByProInstanceId(String id){
-        return taskService.createTaskQuery().processInstanceId(id).singleResult();
-    }
+
 
     public void updataByProInstanceId(AskForLeave askForLeave){
         this.mapper.updataByProInstanceId(askForLeave);
     }
 
+    //cacheNames 缓存区间， key 缓存唯一标识
+    @Cacheable(cacheNames = "node", key = "#processDefinitionId")
+    public List<Map<String, String>> getAllNode(String processDefinitionId){
+        System.out.println("==================查询一次");
+        BpmnModel model = repositoryService.getBpmnModel(processDefinitionId);
+        List<Map<String, String>> listEleIds = null;
+        if(model != null) {
+            Collection<FlowElement> flowElements = model.getMainProcess().getFlowElements();
+            listEleIds = new ArrayList<>(flowElements.size()+5);
+            for (FlowElement e : flowElements) {
+                if(e instanceof UserTask){
+                    Map<String, String> map = new HashMap<>();
+                    map.put("id", e.getId());
+                    map.put("name", e.getName());
+                    listEleIds.add(map);
+                }
+            }
+        }
+        return listEleIds;
+    }
 
 
+    private Task getTaskByProInstanceId(String id){
+        return taskService.createTaskQuery().processInstanceId(id).singleResult();
+    }
 }

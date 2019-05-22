@@ -1,5 +1,5 @@
 
-package com.revert.xc.activitit.util;
+package com.revert.xc.activitit.util.activiti.generatorImg;
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -72,9 +72,9 @@ public class CustomProcessDiagramCanvas {
 	protected static Color			CONDITIONAL_INDICATOR_COLOR		= new Color(255, 255, 255);
 	// protected static Color HIGHLIGHT_COLOR = Color.RED;
 	// 设置默认高亮颜色
-	protected static Color			HIGHLIGHT_COLOR					= Color.RED;
+	public static Color			HIGHLIGHT_COLOR					= Color.RED;
 	//设置当前节点所在的高亮颜色
-	protected static Color 			HIGHLIGHT_COLOR_CURRENT_NODE 	= Color.GREEN;
+	public static Color 			HIGHLIGHT_COLOR_CURRENT_NODE 	= Color.GREEN;
 
 	protected static Color			LABEL_COLOR						= new Color(112, 146, 190);
 	protected static Color			TASK_BORDER_COLOR				= new Color(187, 187, 187);
