@@ -55,14 +55,10 @@
 │      │  ├─log4j2							日志记录
 │      │  ├─logback
 │      │  ├─processes						流程图
-│      │  ├─public							页面
-│      │  │  └─index
-│      │  └─static							js
-│      │      ├─css
-│      │      ├─font
-│      │      ├─js
-│      │      └─plugs
+│      │  ├─public							页面相关
+│      │  └─static							js、css相关
 │      └─test								测试
-│          └─com
-│              └─revert
-│                  └─test
+
+
+
+![catalog01](./doc/img/catalog01.jpg)
