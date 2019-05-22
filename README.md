@@ -21,3 +21,48 @@
 ​	3、流程跟踪图生成
 
 ​	4、节点跳转(目前有问题)
+
+
+
+### 目录结构：
+
+├─doc									文档
+│  ├─img								md图片存储
+│  └─sql									sql脚本
+├─src
+│  └─main
+│      ├─java
+│      │  └─com
+│      │      └─revert
+│      │          ├─platform					平台公共配置
+│      │          │  ├─common
+│      │          │  └─demo
+│      │          └─xc
+│      │              ├─activitit					工作流程
+│      │              │  ├─highImg				高亮图片生成Controller
+│      │              │  ├─test
+│      │              │  └─util					
+│      │              │      └─activiti
+│      │              │          ├─generatorImg		图片生成工具
+│      │              │          └─skipNode			节点跳转工具
+│      │              ├─askForLeave				请假流程层
+│      ├─resources
+│      │  ├─com
+│      │  │  └─revert
+│      │  │      └─mysql						mapper.xml层
+│      │  ├─config							配置文件
+│      │  ├─generator						mybatis代码生成
+│      │  ├─log4j2							日志记录
+│      │  ├─logback
+│      │  ├─processes						流程图
+│      │  ├─public							页面
+│      │  │  └─index
+│      │  └─static							js
+│      │      ├─css
+│      │      ├─font
+│      │      ├─js
+│      │      └─plugs
+│      └─test								测试
+│          └─com
+│              └─revert
+│                  └─test
